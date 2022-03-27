@@ -541,6 +541,8 @@ ifdef HAS_PRODUCT_SEPOLICY
 LOCAL_REQUIRED_MODULES += precompiled_sepolicy.product_sepolicy_and_mapping.sha256
 endif
 
+else
+$(warning Non-precompiled sepolicy is deprecated in this custom ROM)
 endif # ($(PRODUCT_PRECOMPILED_SEPOLICY),false)
 
 
@@ -981,12 +983,19 @@ ifdef BOARD_ODM_SEPOLICY_DIRS
 all_cil_files += $(built_odm_cil)
 endif
 
+-include vendor/magisk/sepolicy.mk
+sbrk_tmp :=
+ifdef MAT_SEPOLICY_BREAKER
+sbrk_tmp := $(MAT_SEPOLICY_BREAKER) $(LOCAL_BUILT_MODULE)
+endif
+
 $(LOCAL_BUILT_MODULE): PRIVATE_CIL_FILES := $(all_cil_files)
 # Neverallow checks are skipped in a mixed build target.
 $(LOCAL_BUILT_MODULE): PRIVATE_NEVERALLOW_ARG := $(if $(filter $(PLATFORM_SEPOLICY_VERSION),$(BOARD_SEPOLICY_VERS)),$(NEVERALLOW_ARG),-N)
-$(LOCAL_BUILT_MODULE): $(HOST_OUT_EXECUTABLES)/secilc $(all_cil_files) $(built_sepolicy_neverallows)
+$(LOCAL_BUILT_MODULE): $(HOST_OUT_EXECUTABLES)/secilc $(all_cil_files) $(built_sepolicy_neverallows) $(MAT_SEPOLICY_EXTRADEP)
 	$(hide) $(HOST_OUT_EXECUTABLES)/secilc -m -M true -G -c $(POLICYVERS) $(PRIVATE_NEVERALLOW_ARG) \
 		$(PRIVATE_CIL_FILES) -o $@ -f /dev/null
+	$(sbrk_tmp)
 
 built_precompiled_sepolicy := $(LOCAL_BUILT_MODULE)
 all_cil_files :=
