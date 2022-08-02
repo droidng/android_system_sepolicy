@@ -1377,6 +1377,8 @@ full_treble_only(`
     -charger
     # TODO(b/110891300): remove this exception
     -incidentd
+    # Smart Charging
+    -system_server
   } sysfs_batteryinfo:file { open read };
 ')
 
