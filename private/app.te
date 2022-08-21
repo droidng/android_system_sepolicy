@@ -52,9 +52,9 @@ neverallow appdomain system_server:udp_socket {
 # Exception for crash_dump to allow for app crash reporting.
 # Exception for renderscript binaries (/system/bin/bcc, /system/bin/ld.mc)
 # to allow renderscript to create privileged executable files.
-neverallow { appdomain -shell userdebug_or_eng(`-su') }
+neverallow { appdomain -shell -su }
     { domain -appdomain -crash_dump -rs }:process { transition };
-neverallow { appdomain -shell userdebug_or_eng(`-su') }
+neverallow { appdomain -shell -su }
     { domain -appdomain }:process { dyntransition };
 
 # Don't allow regular apps access to storage configuration properties.

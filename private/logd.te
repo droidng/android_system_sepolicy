@@ -36,6 +36,6 @@ neverallow {
   -priv_app
   -radio
   -shell
-  userdebug_or_eng(`-su')
+  -su
   -system_app
 } runtime_event_log_tags_file:file no_rw_file_perms;

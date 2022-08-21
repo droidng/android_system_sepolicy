@@ -1,7 +1,8 @@
-userdebug_or_eng(`
-  typeattribute su coredomain;
+typeattribute su coredomain;
 
-  domain_auto_trans(shell, su_exec, su)
+domain_auto_trans(shell, su_exec, su)
+
+userdebug_or_eng(`
   # Allow dumpstate to call su on userdebug / eng builds to collect
   # additional information.
   domain_auto_trans(dumpstate, su_exec, su)
@@ -18,13 +19,12 @@ userdebug_or_eng(`
 
   # Put the perfetto command into its domain so it is the same on user, userdebug and eng.
   domain_auto_trans(su, perfetto_exec, perfetto)
-
-  # su is also permissive to permit setenforce.
-  permissive su;
-
-  app_domain(su)
-
-  # Do not audit accesses to keystore2 namespace for the su domain.
-  dontaudit su keystore2_key_type:{ keystore2 keystore2_key } *;
-
 ')
+
+# su is also permissive to permit setenforce.
+permissive su;
+
+app_domain(su)
+
+# Do not audit accesses to keystore2 namespace for the su domain.
+dontaudit su keystore2_key_type:{ keystore2 keystore2_key } *;

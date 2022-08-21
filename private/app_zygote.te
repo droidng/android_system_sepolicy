@@ -148,7 +148,7 @@ neverallow app_zygote {
   -app_zygote
   -logd
   -system_server
-  userdebug_or_eng(`-su')
+  -su
   userdebug_or_eng(`-heapprofd')
   userdebug_or_eng(`-traced_perf')
 }:unix_dgram_socket *;
@@ -156,7 +156,7 @@ neverallow app_zygote {
 neverallow app_zygote {
   domain
   -app_zygote
-  userdebug_or_eng(`-su')
+  -su
   userdebug_or_eng(`-heapprofd')
   userdebug_or_eng(`-traced_perf')
 }:unix_stream_socket *;

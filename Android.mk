@@ -1050,11 +1050,11 @@ $(built_sepolicy_neverallows)
 	@mkdir -p $(dir $@)
 	$(hide) $< -m -M true -G -c $(POLICYVERS) $(PRIVATE_NEVERALLOW_ARG) $(PRIVATE_CIL_FILES) -o $@.tmp -f /dev/null
 	$(hide) $(HOST_OUT_EXECUTABLES)/sepolicy-analyze $@.tmp permissive > $@.permissivedomains
-	$(hide) if [ "$(TARGET_BUILD_VARIANT)" = "user" -a -s $@.permissivedomains ]; then \
+	$(hide) if [ "$(TARGET_BUILD_VARIANT)" = "user" -a ! -z "$$(cat $@.permissivedomains | grep -v '^su$$')" ]; then \
 		echo "==========" 1>&2; \
 		echo "ERROR: permissive domains not allowed in user builds" 1>&2; \
 		echo "List of invalid domains:" 1>&2; \
-		cat $@.permissivedomains 1>&2; \
+		cat $@.permissivedomains | grep -v '^su$$' 1>&2; \
 		exit 1; \
 		fi
 	$(hide) mv $@.tmp $@
@@ -1111,11 +1111,11 @@ $(LOCAL_BUILT_MODULE): $(sepolicy.recovery.conf) $(HOST_OUT_EXECUTABLES)/checkpo
 	$(hide) $(CHECKPOLICY_ASAN_OPTIONS) $(HOST_OUT_EXECUTABLES)/checkpolicy -M -c \
 		$(POLICYVERS) -o $@.tmp $<
 	$(hide) $(HOST_OUT_EXECUTABLES)/sepolicy-analyze $@.tmp permissive > $@.permissivedomains
-	$(hide) if [ "$(TARGET_BUILD_VARIANT)" = "user" -a -s $@.permissivedomains ]; then \
+	$(hide) if [ "$(TARGET_BUILD_VARIANT)" = "user" -a ! -z "$$(cat $@.permissivedomains | grep -v '^su$$')" ]; then \
 		echo "==========" 1>&2; \
 		echo "ERROR: permissive domains not allowed in user builds" 1>&2; \
 		echo "List of invalid domains:" 1>&2; \
-		cat $@.permissivedomains 1>&2; \
+		cat $@.permissivedomains | grep -v '^su$$' 1>&2; \
 		exit 1; \
 		fi
 	$(hide) mv $@.tmp $@
